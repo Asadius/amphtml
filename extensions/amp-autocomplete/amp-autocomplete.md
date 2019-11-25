@@ -85,6 +85,11 @@ Example:
     </td>
   </tr>
   <tr>
+    <td width="40%"><strong>prefetch (optional)</strong></td>
+    <td> Prefetch remote data if this attribute is present to improve responsiveness for users since the default is to fetch on touchstart or input focus, whichever occurs first. Requires src URL to be specified.
+    </td>
+  </tr>
+  <tr>
     <td width="40%"><strong>filter-expr (optional)</strong></td>
     <td>Required if <code>filter==custom</code></td>
   </tr>
