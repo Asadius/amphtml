@@ -938,6 +938,16 @@ describes.realWin(
           });
         });
       });
-    });
-  }
+
+      it('should display fallback on prefetch', () => {
+        impl.element.setAttribute('prefetch', 'true');
+        env.sandbox.stub(impl, 'getFallback').returns(true);
+        return element.layoutCallback().then(() => {
+            expect(getDataSpy).to.have.been.calledOnce;
+            expect(fallbackSpy).to.have.been.calledWith('Error for test');
+            expect(toggleFallbackSpy).to.have.been.calledWith(true);
+          });
+        });
+      });
+    }
 );
