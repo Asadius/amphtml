@@ -171,9 +171,6 @@ export class AmpAutocomplete extends AMP.BaseElement {
 
     /** @private {boolean} */
     this.hasInitialFetch_ = false;
-
-    /** @private {boolean} */
-    this.prefetch_ = false;
   }
 
   /** @override */
@@ -192,9 +189,6 @@ export class AmpAutocomplete extends AMP.BaseElement {
         'Expected a <script type="application/json"> child or ' +
           'a URL specified in "src".'
       );
-    }
-    if (this.element.hasAttribute('src') && this.element.hasAttribute('prefetch')) {
-      this.prefetch_ = true;
     }
 
     const inputElements = childElementsByTag(this.element, 'INPUT');
@@ -377,7 +371,7 @@ export class AmpAutocomplete extends AMP.BaseElement {
       this.selectHandler_(e);
     });
 
-    if (this.prefetch_) {
+    if (this.element.hasAttribute('src') && this.element.hasAttribute('prefetch')) {
       return this.checkFirstInteractionAndMaybeFetchData_();
     }
 
