@@ -263,6 +263,48 @@ describes.realWin(
       });
     });
 
+    it('should prefetch remote data when src and prefetch are specified', () => {
+      const data = {
+        items: ['a', 'b', 'c'],
+      };
+      return getAutocomplete(
+        {
+          'filter': 'substring',
+          'src': 'https://examples.com/json',
+          'prefetch': 'prefetch',
+        },
+        data,
+        false
+      ).then(async ampAutocomplete => {
+        const impl = ampAutocomplete.implementation_;
+        let getDataSpy = env.sandbox
+          .stub(impl, 'getRemoteData_')
+          .resolves(['a', 'b', 'c']);
+        await ampAutocomplete.layoutCallback().then(() => {
+          expect(impl.sourceData_).to.have.ordered.members(data.items);
+        });
+      });
+    });
+
+    it('should not prefetch remote data when prefetch present but src is not specified', () => {
+      const data = {
+        items: ['a', 'b', 'c'],
+      };
+      return getAutocomplete(
+        {
+          'filter': 'substring',
+          'prefetch': 'prefetch',
+        },
+        data,
+        false
+      ).then(async ampAutocomplete => {
+        const impl = ampAutocomplete.implementation_;
+        await ampAutocomplete.layoutCallback().then(() => {
+          expect(impl.sourceData_).to.be.null;
+        });
+      });
+    });
+
     it('should not fetch remote data when specified in src before first user interaction', () => {
       const data = {
         items: [
@@ -314,7 +356,7 @@ describes.realWin(
       });
     });
 
-    it('should not fetch remote data when specified in src and using nested items property before first user interactino', () => {
+    it('should not fetch remote data when specified in src and using nested items property before first user interaction', () => {
       const data = {
         deeply: {
           nested: {
