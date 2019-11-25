@@ -170,7 +170,10 @@ export class AmpAutocomplete extends AMP.BaseElement {
     this.viewport_ = null;
 
     /** @private {boolean} */
-    this.interacted_ = false;
+    this.hasInitialFetch_ = false;
+
+    /** @private {boolean} */
+    this.prefetch_ = false;
   }
 
   /** @override */
@@ -189,6 +192,9 @@ export class AmpAutocomplete extends AMP.BaseElement {
         'Expected a <script type="application/json"> child or ' +
           'a URL specified in "src".'
       );
+    }
+    if (this.element.hasAttribute('src') && this.element.hasAttribute('prefetch')) {
+      this.prefetch_ = true;
     }
 
     const inputElements = childElementsByTag(this.element, 'INPUT');
@@ -370,6 +376,10 @@ export class AmpAutocomplete extends AMP.BaseElement {
     this.container_.addEventListener('mousedown', e => {
       this.selectHandler_(e);
     });
+
+    if (this.prefetch_) {
+      return this.checkFirstInteractionAndMaybeFetchData_();
+    }
 
     return this.filterDataAndRenderResults_(this.sourceData_, this.userInput_);
   }
@@ -742,10 +752,10 @@ export class AmpAutocomplete extends AMP.BaseElement {
    * @private
    */
   checkFirstInteractionAndMaybeFetchData_() {
-    if (this.interacted_ || !this.element.hasAttribute('src')) {
+    if (this.hasInitialFetch_ || !this.element.hasAttribute('src')) {
       return Promise.resolve();
     }
-    this.interacted_ = true;
+    this.hasInitialFetch_ = true;
     return this.getRemoteData_().then(
       remoteData => {
         this.sourceData_ = remoteData;
