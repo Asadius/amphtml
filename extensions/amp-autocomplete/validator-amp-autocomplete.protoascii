@@ -56,6 +56,12 @@ tags: {  # <amp-autocomplete>
       allow_relative: true
     }
   }
+  attrs: {
+    name: "prefetch"
+    trigger: {
+      also_requires_attr: "src"
+    }
+  }
   attrs: { name: "submit-on-enter" }
   attrs: {
     name: "suggest-first"
